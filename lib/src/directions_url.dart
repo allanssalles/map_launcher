@@ -20,7 +20,9 @@ String getMapDirectionsUrl({
         url: 'https://www.google.com/maps/dir/',
         queryParams: {
           'api': '1',
-          'destination': '${destination.latitude},${destination.longitude}',
+          'destination': destinationTitle != null && destinationTitle.isNotEmpty
+              ? Utils.replaceSpaces(destinationTitle)
+              : '${destination.latitude},${destination.longitude}',
           'origin': Utils.nullOrValue(
             origin,
             '${origin?.latitude},${origin?.longitude}',
@@ -38,7 +40,9 @@ String getMapDirectionsUrl({
         url: 'https://www.google.com/maps/dir/',
         queryParams: {
           'api': '1',
-          'destination': '${destination.latitude},${destination.longitude}',
+          'destination': destinationTitle != null && destinationTitle.isNotEmpty
+              ? Utils.replaceSpaces(destinationTitle)
+              : '${destination.latitude},${destination.longitude}',
           'origin': Utils.nullOrValue(
             origin,
             '${origin?.latitude},${origin?.longitude}',
@@ -55,7 +59,9 @@ String getMapDirectionsUrl({
       return Utils.buildUrl(
         url: 'http://maps.apple.com/maps',
         queryParams: {
-          'daddr': '${destination.latitude},${destination.longitude}',
+          'daddr': destinationTitle != null && destinationTitle.isNotEmpty
+              ? Utils.replaceSpaces(destinationTitle, replacement: '%20')
+              : '${destination.latitude},${destination.longitude}',
           ...(extraParams ?? {}),
         },
       );
@@ -98,6 +104,8 @@ String getMapDirectionsUrl({
       return Utils.buildUrl(
         url: 'waze://',
         queryParams: {
+          'q': Utils.nullOrValue(destinationTitle,
+              Utils.replaceSpaces(destinationTitle ?? '', replacement: '%20')),
           'll': '${destination.latitude},${destination.longitude}',
           'z': '10',
           'navigate': 'yes',

@@ -140,4 +140,8 @@ class Utils {
         return 'd';
     }
   }
+
+  static String replaceSpaces(String url, {String replacement = '+'}) {
+    return url.replaceAll(' ', replacement);
+  }
 }
