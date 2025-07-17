@@ -7,3 +7,9 @@
 build/
 
 .idea
+
+# FVM Version Cache
+.fvm/
+
+# https://dart.dev/tools/pub/private-files#pubspec-lock
+/pubspec.lock

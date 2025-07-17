@@ -336,5 +336,12 @@ String getMapMarkerUrl({
           'source': 'coor',
         },
       );
+
+    case MapType.mappls:
+      return Utils.buildUrl(
+        url:
+            'https://www.mappls.com/location/${coords.latitude},${coords.longitude}',
+        queryParams: {},
+      );
   }
 }

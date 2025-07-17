@@ -1,3 +1,12 @@
+## 3.5.0
+- Add Mappls MapmyIndia (@Ajaay7 & @Saksham66)
+
+## 3.4.0
+- Remove support for apps using android v1 embedding
+
+## 3.3.1
+- Remove support for Maps.me on android as it stopped working a while ago
+
 ## 3.3.0
 - Add privacy manifest
 - Bump flutter min version to 3.13.0

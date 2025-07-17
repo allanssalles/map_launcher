@@ -10,7 +10,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-private enum class MapType { google, googleGo, amap, baidu, waze, yandexNavi, yandexMaps, citymapper, mapswithme, osmand, osmandplus, doubleGis, tencent, here, petal, tomtomgo, copilot, sygicTruck, tomtomgofleet, flitsmeister, truckmeister, naver, kakao, tmap, mapyCz }
+private enum class MapType { google, googleGo, amap, baidu, waze, yandexNavi, yandexMaps, citymapper, osmand, osmandplus, doubleGis, tencent, here, petal, tomtomgo, copilot, sygicTruck, tomtomgofleet, flitsmeister, truckmeister, naver, kakao, tmap, mapyCz, mappls }
 
 private class MapModel(val mapType: MapType, val mapName: String, val packageName: String, val urlPrefix: String) {
     fun toMap(): Map<String, String> {
@@ -25,17 +25,7 @@ class MapLauncherPlugin : FlutterPlugin, MethodCallHandler {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "map_launcher")
         this.context = flutterPluginBinding.applicationContext
-        channel?.setMethodCallHandler(this)
-    }
-
-    companion object {
-        fun registerWith(
-                @NonNull registrar: io.flutter.plugin.common.PluginRegistry.Registrar) {
-            val mapLauncherPlugin = MapLauncherPlugin()
-            mapLauncherPlugin.channel = MethodChannel(registrar.messenger(), "map_launcher")
-            mapLauncherPlugin.context = registrar.context()
-            mapLauncherPlugin.channel?.setMethodCallHandler(mapLauncherPlugin)
-        }
+        channel.setMethodCallHandler(this)
     }
 
     private val maps = listOf(
@@ -47,7 +37,6 @@ class MapLauncherPlugin : FlutterPlugin, MethodCallHandler {
             MapModel(MapType.yandexNavi, "Yandex Navigator", "ru.yandex.yandexnavi", "yandexnavi://"),
             MapModel(MapType.yandexMaps, "Yandex Maps", "ru.yandex.yandexmaps", "yandexmaps://"),
             MapModel(MapType.citymapper, "Citymapper", "com.citymapper.app.release", "citymapper://"),
-            MapModel(MapType.mapswithme, "MAPS.ME", "com.mapswithme.maps.pro", "mapswithme://"),
             MapModel(MapType.osmand, "OsmAnd", "net.osmand", "osmandmaps://"),
             MapModel(MapType.osmandplus, "OsmAnd+", "net.osmand.plus", "osmandmaps://"),
             MapModel(MapType.doubleGis, "2GIS", "ru.dublgis.dgismobile", "dgis://"),
@@ -63,7 +52,8 @@ class MapLauncherPlugin : FlutterPlugin, MethodCallHandler {
             MapModel(MapType.naver, "Naver Map", "com.nhn.android.nmap", "nmap://"),
             MapModel(MapType.kakao, "Kakao Maps", "net.daum.android.map", "kakaomap://"),
             MapModel(MapType.tmap, "TMap", "com.skt.tmap.ku", "tmap://"),
-            MapModel(MapType.mapyCz, "Mapy CZ", "cz.seznam.mapy", "https://")
+            MapModel(MapType.mapyCz, "Mapy CZ", "cz.seznam.mapy", "https://"),
+            MapModel(MapType.mappls, "Mappls MapmyIndia","com.mmi.maps","mappls://")
     )
 
     private fun getInstalledMaps(): List<MapModel> {
@@ -117,7 +107,7 @@ class MapLauncherPlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
 }
