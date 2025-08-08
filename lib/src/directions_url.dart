@@ -30,8 +30,8 @@ String getMapDirectionsUrl({
           'waypoints': waypoints
               ?.map((waypoint) => '${waypoint.latitude},${waypoint.longitude}')
               .join('|'),
-          'travelmode': Utils.enumToString(directionsMode),
-          ...(extraParams ?? {}),
+          'travelmode': directionsMode?.name,
+          ...?extraParams,
         },
       );
 
@@ -50,8 +50,8 @@ String getMapDirectionsUrl({
           'waypoints': waypoints
               ?.map((waypoint) => '${waypoint.latitude},${waypoint.longitude}')
               .join('|'),
-          'travelmode': Utils.enumToString(directionsMode),
-          ...(extraParams ?? {}),
+          'travelmode': directionsMode?.name,
+          ...?extraParams,
         },
       );
 
@@ -62,7 +62,7 @@ String getMapDirectionsUrl({
           'daddr': destinationTitle != null && destinationTitle.isNotEmpty
               ? Utils.replaceSpaces(destinationTitle, replacement: '%20')
               : '${destination.latitude},${destination.longitude}',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -79,7 +79,7 @@ String getMapDirectionsUrl({
           'sname': originTitle,
           't': Utils.getAmapDirectionsMode(directionsMode),
           'dev': '0',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -96,7 +96,7 @@ String getMapDirectionsUrl({
           'coord_type': 'gcj02',
           'mode': Utils.getBaiduDirectionsMode(directionsMode),
           'src': 'com.map_launcher',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -109,21 +109,24 @@ String getMapDirectionsUrl({
           'll': '${destination.latitude},${destination.longitude}',
           'z': '10',
           'navigate': 'yes',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
     case MapType.citymapper:
-      return Utils.buildUrl(url: 'citymapper://directions', queryParams: {
-        'endcoord': '${destination.latitude},${destination.longitude}',
-        'endname': destinationTitle,
-        'startcoord': Utils.nullOrValue(
-          origin,
-          '${origin?.latitude},${origin?.longitude}',
-        ),
-        'startname': originTitle,
-        ...(extraParams ?? {}),
-      });
+      return Utils.buildUrl(
+        url: 'citymapper://directions',
+        queryParams: {
+          'endcoord': '${destination.latitude},${destination.longitude}',
+          'endname': destinationTitle,
+          'startcoord': Utils.nullOrValue(
+            origin,
+            '${origin?.latitude},${origin?.longitude}',
+          ),
+          'startname': originTitle,
+          ...?extraParams,
+        },
+      );
 
     case MapType.osmand:
     case MapType.osmandplus:
@@ -134,7 +137,7 @@ String getMapDirectionsUrl({
             'lat': '${destination.latitude}',
             'lon': '${destination.longitude}',
             'title': destinationTitle,
-            ...(extraParams ?? {}),
+            ...?extraParams,
           },
         );
       }
@@ -162,7 +165,7 @@ String getMapDirectionsUrl({
           'v': '1',
           'll': '${destination.latitude},${destination.longitude}',
           'n': destinationTitle,
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -173,7 +176,7 @@ String getMapDirectionsUrl({
           'rtext':
               '${origin?.latitude},${origin?.longitude}~${destination.latitude},${destination.longitude}',
           'rtt': Utils.getYandexMapsDirectionsMode(directionsMode),
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -192,9 +195,7 @@ String getMapDirectionsUrl({
       return Utils.buildUrl(
         url:
             'dgis://2gis.ru/routeSearch/rsType/${Utils.getDoubleGisDirectionsMode(directionsMode)}/${origin == null ? '' : 'from/${origin.longitude},${origin.latitude}/'}to/${destination.longitude},${destination.latitude}',
-        queryParams: {
-          ...(extraParams ?? {}),
-        },
+        queryParams: extraParams ?? {},
       );
 
     case MapType.tencent:
@@ -206,7 +207,7 @@ String getMapDirectionsUrl({
           'to': destinationTitle,
           'tocoord': '${destination.latitude},${destination.longitude}',
           'type': Utils.getTencentDirectionsMode(directionsMode),
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -216,21 +217,24 @@ String getMapDirectionsUrl({
             'https://share.here.com/r/${origin?.latitude},${origin?.longitude},$originTitle/${destination.latitude},${destination.longitude}',
         queryParams: {
           'm': Utils.getHereDirectionsMode(directionsMode),
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
     case MapType.petal:
-      return Utils.buildUrl(url: 'petalmaps://route', queryParams: {
-        'daddr':
-            '${destination.latitude},${destination.longitude} (${destinationTitle ?? 'Destination'})',
-        'saddr': Utils.nullOrValue(
-          origin,
-          '${origin?.latitude},${origin?.longitude} (${originTitle ?? 'Origin'})',
-        ),
-        'type': Utils.getTencentDirectionsMode(directionsMode),
-        ...(extraParams ?? {}),
-      });
+      return Utils.buildUrl(
+        url: 'petalmaps://route',
+        queryParams: {
+          'daddr':
+              '${destination.latitude},${destination.longitude} (${destinationTitle ?? 'Destination'})',
+          'saddr': Utils.nullOrValue(
+            origin,
+            '${origin?.latitude},${origin?.longitude} (${originTitle ?? 'Origin'})',
+          ),
+          'type': Utils.getTencentDirectionsMode(directionsMode),
+          ...?extraParams,
+        },
+      );
 
     case MapType.tomtomgo:
       if (Platform.isIOS) {
@@ -238,7 +242,7 @@ String getMapDirectionsUrl({
           url: 'tomtomgo://x-callback-url/navigate',
           queryParams: {
             'destination': '${destination.latitude},${destination.longitude}',
-            ...(extraParams ?? {}),
+            ...?extraParams,
           },
         );
       }
@@ -246,7 +250,7 @@ String getMapDirectionsUrl({
         url: 'google.navigation:',
         queryParams: {
           'q': '${destination.latitude},${destination.longitude}',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
         // the TomTom Go app cannot handle the ? at the start of the query
       ).replaceFirst('?', '');
@@ -262,7 +266,7 @@ String getMapDirectionsUrl({
           'name': destinationTitle ?? '',
           'lat': "${destination.latitude}",
           'long': "${destination.longitude}",
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -271,7 +275,7 @@ String getMapDirectionsUrl({
         url: 'google.navigation:',
         queryParams: {
           'q': '${destination.latitude},${destination.longitude}',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -281,9 +285,7 @@ String getMapDirectionsUrl({
       return Utils.buildUrl(
         url:
             'com.sygic.aura://coordinate|${destination.longitude}|${destination.latitude}|drive',
-        queryParams: {
-          ...(extraParams ?? {}),
-        },
+        queryParams: extraParams ?? {},
       );
 
     case MapType.flitsmeister:
@@ -292,7 +294,7 @@ String getMapDirectionsUrl({
           url: 'flitsmeister://',
           queryParams: {
             'geo': '${destination.latitude},${destination.longitude}',
-            ...(extraParams ?? {}),
+            ...?extraParams,
           },
         );
       }
@@ -307,7 +309,7 @@ String getMapDirectionsUrl({
           url: 'truckmeister://',
           queryParams: {
             'geo': '${destination.latitude},${destination.longitude}',
-            ...(extraParams ?? {}),
+            ...?extraParams,
           },
         );
       }
@@ -315,7 +317,7 @@ String getMapDirectionsUrl({
         url: 'geo:${destination.latitude},${destination.longitude}',
         queryParams: {
           'q': '${destination.latitude},${destination.longitude}',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -329,7 +331,7 @@ String getMapDirectionsUrl({
           'dlat': '${destination.latitude}',
           'dlng': '${destination.longitude}',
           'dname': destinationTitle,
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -337,10 +339,11 @@ String getMapDirectionsUrl({
       return Utils.buildUrl(
         url: 'kakaomap://route',
         queryParams: {
-          'sp':
-              origin == null ? null : '${origin.latitude},${origin.longitude}',
+          'sp': origin == null
+              ? null
+              : '${origin.latitude},${origin.longitude}',
           'ep': '${destination.latitude},${destination.longitude}',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -355,7 +358,7 @@ String getMapDirectionsUrl({
           'goaly': '${destination.latitude}',
           'goalx': '${destination.longitude}',
           'carType': '1',
-          ...(extraParams ?? {}),
+          ...?extraParams,
         },
       );
 
@@ -415,11 +418,7 @@ String getMapDirectionsUrl({
 
       return Utils.buildUrl(
         url: "https://mappls.com/navigation",
-        queryParams: {
-          'places': query,
-          'viaPoints': viaPoints,
-          'mode': mode,
-        },
+        queryParams: {'places': query, 'viaPoints': viaPoints, 'mode': mode},
       );
   }
 }
